@@ -83,6 +83,9 @@ You Created. --> Save.
 	# Give Unique Name And S3 Bucket which you created.
 	export NAME=akumbu25.k8s.local
 	export KOPS_STATE_STORE=s3://akumbu25.k8s.local
+	
+	export NAME=akumbu18.k8s.local 
+	export KOPS_STATE_STORE=s3://akumbu18.k8s.local
  
     source .bashrc
 	
@@ -114,7 +117,7 @@ You Created. --> Save.
  
 # 12) To Delete Cluster
 
-   kops delete cluster --name=${NAME} --state=${KOPS_STATE_STORE} --yes  
+  sudo kops delete cluster --name=${NAME} --state=${KOPS_STATE_STORE} --yes  
    
 ====================================================================================================
 
