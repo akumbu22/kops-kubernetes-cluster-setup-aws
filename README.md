@@ -46,6 +46,8 @@
  	sudo wget https://github.com/kubernetes/kops/releases/download/v1.22.0/kops-linux-amd64
  	sudo chmod +x kops-linux-amd64
  	sudo mv kops-linux-amd64 /usr/local/bin/kops
+	
+	
  
 # 4) Install kubectl
 
@@ -54,6 +56,58 @@
  sudo mv ./kubectl /usr/local/bin/kubectl
  aws s3 mb s3://nubonglegah.k8.local
  aws s3 ls
+
+1akumbu- download/install and check kubectl version in Linux
+
+curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+kubectl version --client
+
+2akumbu- download/install kops
+
+curl -Lo kops https://github.com/kubernetes/kops/releases/download/$(curl -s https://api.github.com/repos/kubernetes/kops/releases/latest | grep tag_name | cut -d '"' -f 4)/kops-linux-amd64
+chmod +x kops
+sudo mv kops /usr/local/bin/kops
+
+3akumbu-Install or update the AWS CLI
+
+curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+unzip awscliv2.zip
+sudo ./aws/install
+
+4akumbu-Create an IAM role from AWS Console
+
+Go to aws iam -click users- add users- select Access key & Programmatic access
+click next- click Attach existing policies directly
+Add the policies below in  # 5)
+create n download
+Now configure awscli with the above
+run aws configure 
+run aws iam list-users (to confirm users)
+
+5akumbu-create an S3 bucket
+
+e.g aws s3 mb s3://akumbu18.k8s.local OR
+aws s3api create-bucket --bucket (bucketname) --region (regionName)
+aws s3 ls (to see all buckets)
+
+6akumbu- set environmental variables for kops
+
+vi .bashrc (and paste the below)
+        export NAME=akumbu18.k8s.local 
+	export KOPS_STATE_STORE=s3://akumbu18.k8s.local
+ source .bashrc (to refresh)
+ 
+ 7akumbu- generate ssh keys
+ 
+ run ssh-keygen
+ Now create cluster confirguration
+ kops create cluster --zones us-east-1b --master-size t2.medium --master-count 1 --node-size t2.medium --node-count=2 ${NAME} --cloud aws
+ Now copy and run your kops update cluster command given
+ run kops edit cluster
+ 
+ 
+
 
 # 5) Create an IAM role from AWS Console or CLI with below Policies.
 
